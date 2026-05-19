@@ -41,12 +41,53 @@ FALLBACK_INSIGHTS = {
 
 
 def run_insights(metrics_path: str, output_path: str, config: dict) -> None:
-    pass
+    with timer("load_metrics", logger):
+        metrics = read_json(metrics_path)
+
+    prompt = _load_prompt(config)
+    prompt = prompt.replace("{{ metrics_json }}", json.dumps(metrics, indent=2, default=str))
+
+    llm_cfg = config.get("llm", {})
+    with timer("llm_generate", logger):
+        raw = llm_client.generate(
+            prompt,
+            schema=INSIGHTS_SCHEMA,
+            model=llm_cfg.get("model", "llama3.1:8b"),
+            temperature=llm_cfg.get("temperature", 0.0),
+            base_url=llm_cfg.get("base_url", "http://localhost:11434"),
+            timeout_s=llm_cfg.get("timeout_s", 120),
+            max_retries=llm_cfg.get("max_retries", 2),
+        )
+
+    try:
+        insights = json.loads(raw)
+    except (json.JSONDecodeError, TypeError) as exc:
+        logger.warning("Failed to parse LLM response as JSON: %s", exc)
+        insights = None
+
+    if insights is None or not _validate_insights(insights):
+        logger.warning("Insights validation failed — writing fallback")
+        insights = FALLBACK_INSIGHTS.copy()
+        insights["metadata"] = {
+            "generated_at": datetime.utcnow().isoformat(),
+            "prompt_version": llm_cfg.get("prompt_version", "unknown"),
+        }
+
+    write_json(insights, output_path)
+    logger.info("Insights written to %s", output_path)
 
 
 def _load_prompt(config: dict) -> str:
-    pass
+    prompts_dir = Path(config.get("paths", {}).get("prompts_dir", "prompts/"))
+    version = config.get("llm", {}).get("prompt_version", "v1_naive")
+    prompt_path = prompts_dir / f"insights_{version}.txt"
+    return prompt_path.read_text(encoding="utf-8")
 
 
 def _validate_insights(obj: dict) -> bool:
-    pass
+    from src.utils import validate_schema
+    errors = validate_schema(obj, INSIGHTS_SCHEMA)
+    if errors:
+        logger.warning("Schema errors: %s", errors)
+        return False
+    return True
