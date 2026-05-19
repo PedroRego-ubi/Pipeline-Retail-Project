@@ -36,4 +36,38 @@ def generate(
     timeout_s: int = _DEFAULT_TIMEOUT_S,
     max_retries: int = _MAX_RETRIES,
 ) -> str:
-    pass
+    url = f"{base_url.rstrip('/')}/api/generate"
+
+    if schema is not None:
+        keys = ", ".join(f'"{k}"' for k in schema)
+        prompt = (
+            f"{prompt}\n\nRespond with valid JSON only. "
+            f"The response must be a JSON object with keys: {keys}."
+        )
+
+    payload: dict = {
+        "model": model,
+        "prompt": prompt,
+        "stream": False,
+        "options": {"temperature": temperature},
+    }
+    if schema is not None:
+        payload["format"] = "json"
+
+    last_exc: Exception | None = None
+    for attempt in range(1, max_retries + 2):
+        try:
+            logger.debug("LLM request attempt %d/%d", attempt, max_retries + 1)
+            resp = requests.post(url, json=payload, timeout=timeout_s)
+            resp.raise_for_status()
+            return resp.json()["response"]
+        except (requests.RequestException, KeyError, ValueError) as exc:
+            last_exc = exc
+            if attempt <= max_retries:
+                wait = 2 ** (attempt - 1)
+                logger.warning("Attempt %d failed (%s); retrying in %ds", attempt, exc, wait)
+                time.sleep(wait)
+            else:
+                logger.error("All %d attempts failed: %s", max_retries + 1, exc)
+
+    raise RuntimeError(f"LLM generate failed after {max_retries + 1} attempts") from last_exc
