@@ -1,0 +1,70 @@
+{
+  "data_quality": {
+    "completion_rate": 1.0,
+    "force_closed_rate": 0.0,
+    "low_confidence_rate": 0.0,
+    "mean_stitch_confidence": 1.0,
+    "n_journeys": 85347,
+    "orphan_proxy_rate": 0.0
+  },
+  "metadata": {
+    "generated_at": "2026-05-19T09:54:38.469605+00:00"
+  },
+  "metric_grounding": {
+    "grounded": true,
+    "resolved": 0,
+    "total_evidence_metrics": 0,
+    "unresolved": []
+  },
+  "reproducibility": {
+    "match": true,
+    "original_hash": "b46df83df9c7a7a48dbe9e5df941fb93",
+    "original_rows": 85347,
+    "reproduced_hash": "b46df83df9c7a7a48dbe9e5df941fb93",
+    "reproduced_rows": 85347,
+    "row_delta": 0
+  },
+  "schema_validation": {
+    "all_valid": true,
+    "insights": {
+      "errors": [],
+      "valid": true
+    },
+    "journeys": {
+      "errors": [],
+      "valid": true
+    },
+    "metrics": {
+      "errors": [],
+      "valid": true
+    }
+  },
+  "sensitivity_analysis": {
+    "base_max_gap_s": 1800,
+    "baseline": {
+      "avg_stitch_confidence": 1.0,
+      "completion_rate": 1.0,
+      "n_journeys": 85347
+    },
+    "variants": {
+      "minus_20pct": {
+        "avg_confidence_delta": 0.0,
+        "avg_stitch_confidence": 1.0,
+        "completion_rate": 1.0,
+        "completion_rate_delta": 0.0,
+        "max_gap_s": 1440,
+        "n_journeys": 85347,
+        "n_journeys_delta": 0
+      },
+      "plus_20pct": {
+        "avg_confidence_delta": 0.0,
+        "avg_stitch_confidence": 1.0,
+        "completion_rate": 1.0,
+        "completion_rate_delta": 0.0,
+        "max_gap_s": 2160,
+        "n_journeys": 85347,
+        "n_journeys_delta": 0
+      }
+    }
+  }
+}

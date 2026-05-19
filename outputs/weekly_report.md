@@ -1,6 +1,6 @@
 # Weekly Retail Intelligence Report
 **Period:** 2025-03-10 09:00:32 – 2025-03-16 21:53:00
-**Generated:** 2026-05-19T10:24:42.643715
+**Generated:** 2026-05-19T10:41:33.525804
 **Prompt version:** v3_grounded
 
 ---
@@ -101,7 +101,7 @@ avg_duration_s > 90
 
 ### Most visited zones on a given day
 
-total_zone_visits / total_journeys > 0.1
+total_zone_visits / total_journeys > 0.5
 
 *Confidence: medium | Supporting metrics: `zones.total_zone_visits` = 200807, `journey_patterns.total_journeys` = N/A*
 
@@ -135,9 +135,6 @@ single_zone_journeys < 50% of total journeys
 - **High number of force-closed journeys on day 10**
   Possible explanations: inadequate staffing, poor customer service
 
-- **Low confidence in average duration of customer journeys by age range**
-  Possible explanations: data quality issues, incomplete data
-
 
 ---
 
@@ -155,7 +152,7 @@ single_zone_journeys < 50% of total journeys
 ## Caveats
 
 
-- The 'force_closed_rate' metric is not reliable due to high force-closed rates on certain days.
+- The 'force_closed_journeys' metric is only available for days with a peak hour of 10.
 
-- The 'demographics.avg_duration_s' metric has low confidence due to incomplete data and potential biases in the customer journey.
+- The 'total_zone_visits' and 'total_journeys' metrics are not correlated.
 

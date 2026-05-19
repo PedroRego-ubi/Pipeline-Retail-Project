@@ -3,26 +3,17 @@
     {
       "description": "High number of force-closed journeys on day 10",
       "evidence_metrics": [
-        "data_quality.force_closed_rate"
+        "traffic.peak_day",
+        "journey_patterns.force_closed_rate"
       ],
       "possible_explanations": [
         "inadequate staffing, poor customer service"
       ]
-    },
-    {
-      "description": "Low confidence in average duration of customer journeys by age range",
-      "evidence_metrics": [
-        "demographics.avg_duration_s",
-        "journey_patterns.avg_zones_per_journey"
-      ],
-      "possible_explanations": [
-        "data quality issues, incomplete data"
-      ]
     }
   ],
   "caveats": [
-    "The 'force_closed_rate' metric is not reliable due to high force-closed rates on certain days.",
-    "The 'demographics.avg_duration_s' metric has low confidence due to incomplete data and potential biases in the customer journey."
+    "The 'force_closed_journeys' metric is only available for days with a peak hour of 10.",
+    "The 'total_zone_visits' and 'total_journeys' metrics are not correlated."
   ],
   "key_findings": [
     {
@@ -35,7 +26,7 @@
       "title": "Average duration of customer journeys across all days"
     },
     {
-      "claim": "total_zone_visits / total_journeys > 0.1",
+      "claim": "total_zone_visits / total_journeys > 0.5",
       "confidence": "medium",
       "evidence_metrics": [
         "zones.total_zone_visits",
@@ -54,7 +45,7 @@
     }
   ],
   "metadata": {
-    "generated_at": "2026-05-19T09:59:46.535769",
+    "generated_at": "2026-05-19T10:41:33.525804",
     "model": "retail_intelligence_analysis",
     "prompt_version": "v3_grounded",
     "temperature": 0.0
