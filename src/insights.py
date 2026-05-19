@@ -52,10 +52,10 @@ def run_insights(metrics_path: str, output_path: str, config: dict) -> None:
         raw = llm_client.generate(
             prompt,
             schema=INSIGHTS_SCHEMA,
-            model=llm_cfg.get("model", "llama3.1:8b"),
+            model=llm_cfg.get("model", "llama3.2:1b"),
             temperature=llm_cfg.get("temperature", 0.0),
             base_url=llm_cfg.get("base_url", "http://localhost:11434"),
-            timeout_s=llm_cfg.get("timeout_s", 600),
+            timeout_s=llm_cfg.get("timeout_s", 3600),
             max_retries=llm_cfg.get("max_retries", 2),
         )
 

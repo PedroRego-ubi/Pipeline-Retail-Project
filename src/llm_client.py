@@ -20,9 +20,9 @@ import requests
 logger = logging.getLogger(__name__)
 
 _DEFAULT_BASE_URL = "http://localhost:11434"
-_DEFAULT_MODEL = "llama3.1:8b"
+_DEFAULT_MODEL = "llama3.2:1b"
 _DEFAULT_TEMPERATURE = 0.0
-_DEFAULT_TIMEOUT_S = 600
+_DEFAULT_TIMEOUT_S = 3600
 _MAX_RETRIES = 2
 
 

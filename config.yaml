@@ -13,9 +13,9 @@ analytics:
   top_paths_min_length: 2     # minimum zones in a "common path"
 
 llm:
-  model: llama3.1:8b
+  model: llama3.2:1b
   temperature: 0.0            # always 0 for reproducibility
-  timeout_s: 600
+  timeout_s: 3600
   max_retries: 2
   base_url: http://localhost:11434
   prompt_version: v3_grounded  # which prompt file to load from prompts/

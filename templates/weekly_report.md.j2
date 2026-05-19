@@ -1,7 +1,7 @@
 # Weekly Retail Intelligence Report
-**Period:** {{ metrics.metadata.report_period_start }} – {{ metrics.metadata.report_period_end }}
-**Generated:** {{ metrics.metadata.generated_at }}
-**Prompt version:** {{ insights.metadata.prompt_version }}
+**Period:** {{ metrics['summary']['date_range']['start'] }} – {{ metrics['summary']['date_range']['end'] }}
+**Generated:** {{ metrics['metadata']['generated_at'] }}
+**Prompt version:** {{ insights['metadata']['prompt_version'] }}
 
 ---
 
@@ -9,26 +9,23 @@
 
 | Metric | Value |
 |---|---|
-| Total journeys | {{ metrics.summary.total_journeys }} |
-| Total events | {{ metrics.summary.total_events }} |
-| Unique zones | {{ metrics.summary.unique_zones }} |
-| Avg journey duration | {{ metrics.summary.avg_journey_duration_s }}s |
-| Median journey duration | {{ metrics.summary.median_journey_duration_s }}s |
-| Avg zones per journey | {{ metrics.summary.avg_zones_per_journey }} |
+| Total journeys | {{ metrics['summary']['total_journeys'] }} |
+| Avg journey duration | {{ metrics['summary']['avg_duration_s'] }}s |
+| Median journey duration | {{ metrics['summary']['median_duration_s'] }}s |
+| Avg zones per journey | {{ metrics['summary']['avg_zones_per_journey'] }} |
+| Completion rate | {{ metrics['summary']['completion_rate'] }} |
 
 ---
 
 ## Traffic
 
-**Peak day:** {{ metrics.traffic.peak_day }} | **Quietest day:** {{ metrics.traffic.quietest_day }}
-
-**Peak hours:** {{ metrics.traffic.peak_hours | join(", ") }}
+**Peak hours:** {{ metrics['traffic']['peak_hours'] | join(", ") }}
 
 ### Journeys per Day
 
 | Day | Journeys |
 |---|---|
-{% for day, count in metrics.traffic.journeys_per_day.items() -%}
+{% for day, count in metrics['journeys_per_day'].items() -%}
 | {{ day }} | {{ count }} |
 {% endfor %}
 
@@ -38,46 +35,38 @@
 
 ### Top Zones by Visits
 
-| Zone | Visits | Share |
-|---|---|---|
-{% for z in metrics.zones.ranked_by_visits -%}
-| {{ z.zone_id }} | {{ z.visits }} | {{ z.share_pct }}% |
-{% endfor %}
-
-### Top Zones by Dwell Time
-
-| Zone | Avg Dwell (s) | Median Dwell (s) |
-|---|---|---|
-{% for z in metrics.zones.ranked_by_dwell -%}
-| {{ z.zone_id }} | {{ z.avg_dwell_s }} | {{ z.median_dwell_s }} |
+| Zone | Visits |
+|---|---|
+{% for zone, visits in metrics['zones']['visit_counts'].items() -%}
+| {{ zone }} | {{ visits }} |
 {% endfor %}
 
 ---
 
 ## Demographics
 
-| Gender | Share |
-|---|---|
-{% for gender, pct in metrics.demographics.gender_distribution_pct.items() -%}
-| {{ gender }} | {{ pct }}% |
+| Gender | Count | Share |
+|---|---|---|
+{% for gender, data in metrics['demographics']['by_gender'].items() -%}
+| {{ gender }} | {{ data['count'] }} | {{ (data['pct'] * 100) | round(1) }}% |
 {% endfor %}
 
-| Age Range | Share |
-|---|---|
-{% for age, pct in metrics.demographics.age_distribution_pct.items() -%}
-| {{ age }} | {{ pct }}% |
+| Age Range | Count | Share |
+|---|---|---|
+{% for age, data in metrics['demographics']['by_age_range'].items() -%}
+| {{ age }} | {{ data['count'] }} | {{ (data['pct'] * 100) | round(1) }}% |
 {% endfor %}
 
 ---
 
 ## Key Findings
 
-{% for finding in insights.key_findings %}
-### {{ finding.title }}
+{% for finding in insights['key_findings'] %}
+### {{ finding['title'] }}
 
-{{ finding.claim }}
+{{ finding['claim'] }}
 
-*Confidence: {{ finding.confidence }} | Supporting metrics: {% for path in finding.evidence_metrics %}`{{ path }}` = {{ resolve(metrics, path) }}{{ ", " if not loop.last }}{% endfor %}*
+*Confidence: {{ finding['confidence'] }} | Supporting metrics: {% for path in finding['evidence_metrics'] %}`{{ path }}` = {{ resolve(metrics, path) }}{{ ", " if not loop.last }}{% endfor %}*
 
 {% endfor %}
 
@@ -85,12 +74,12 @@
 
 ## Recommendations
 
-{% for rec in insights.recommendations %}
-### {{ rec.title }}
+{% for rec in insights['recommendations'] %}
+### {{ rec['title'] }}
 
-{{ rec.rationale }}
+{{ rec['rationale'] }}
 
-*Supporting metrics: {% for path in rec.evidence_metrics %}`{{ path }}`{{ ", " if not loop.last }}{% endfor %}*
+*Supporting metrics: {% for path in rec['evidence_metrics'] %}`{{ path }}`{{ ", " if not loop.last }}{% endfor %}*
 
 {% endfor %}
 
@@ -98,9 +87,9 @@
 
 ## Anomalies
 
-{% for anomaly in insights.anomalies %}
-- **{{ anomaly.description }}**
-  Possible explanations: {{ anomaly.possible_explanations | join("; ") }}
+{% for anomaly in insights['anomalies'] %}
+- **{{ anomaly['description'] }}**
+  Possible explanations: {{ anomaly['possible_explanations'] | join("; ") }}
 {% endfor %}
 
 ---
@@ -109,16 +98,15 @@
 
 | Signal | Value |
 |---|---|
-| Mean stitch confidence | {{ metrics.data_quality.mean_stitch_confidence }} |
-| Low-confidence journeys | {{ metrics.data_quality.low_confidence_journeys_pct }}% |
-| Orphan event rate | {{ metrics.data_quality.orphan_event_rate }} |
-| Completion rate | {{ metrics.journey_patterns.completion_rate }} |
-| Force-closed rate | {{ metrics.data_quality.force_closed_rate }} |
+| Avg stitch confidence | {{ metrics['data_quality']['avg_stitch_confidence'] }} |
+| Low-confidence rate | {{ metrics['data_quality']['low_confidence_rate'] }} |
+| Force-closed rate | {{ metrics['data_quality']['force_closed_rate'] }} |
+| Completion rate | {{ metrics['summary']['completion_rate'] }} |
 
 ---
 
 ## Caveats
 
-{% for caveat in insights.caveats %}
+{% for caveat in insights['caveats'] %}
 - {{ caveat }}
 {% endfor %}

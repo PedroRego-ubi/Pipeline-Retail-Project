@@ -1,0 +1,73 @@
+{
+  "anomalies": [
+    {
+      "description": "High number of force-closed journeys on day 10",
+      "evidence_metrics": [
+        "data_quality.force_closed_rate"
+      ],
+      "possible_explanations": [
+        "inadequate staffing, poor customer service"
+      ]
+    },
+    {
+      "description": "Low confidence in average duration of customer journeys by age range",
+      "evidence_metrics": [
+        "demographics.avg_duration_s",
+        "journey_patterns.avg_zones_per_journey"
+      ],
+      "possible_explanations": [
+        "data quality issues, incomplete data"
+      ]
+    }
+  ],
+  "caveats": [
+    "The 'force_closed_rate' metric is not reliable due to high force-closed rates on certain days.",
+    "The 'demographics.avg_duration_s' metric has low confidence due to incomplete data and potential biases in the customer journey."
+  ],
+  "key_findings": [
+    {
+      "claim": "avg_duration_s > 90",
+      "confidence": "high",
+      "evidence_metrics": [
+        "demographics.avg_duration_s",
+        "journey_patterns.avg_zones_per_journey"
+      ],
+      "title": "Average duration of customer journeys across all days"
+    },
+    {
+      "claim": "total_zone_visits / total_journeys > 0.1",
+      "confidence": "medium",
+      "evidence_metrics": [
+        "zones.total_zone_visits",
+        "journey_patterns.total_journeys"
+      ],
+      "title": "Most visited zones on a given day"
+    },
+    {
+      "claim": "avg_duration_s > 80 for adults, < 90 for children",
+      "confidence": "low",
+      "evidence_metrics": [
+        "demographics.avg_duration_s",
+        "journey_patterns.avg_zones_per_journey"
+      ],
+      "title": "Average duration of customer journeys by age range"
+    }
+  ],
+  "metadata": {
+    "generated_at": "2026-05-19T09:59:46.535769",
+    "model": "retail_intelligence_analysis",
+    "prompt_version": "v3_grounded",
+    "temperature": 0.0
+  },
+  "recommendations": [
+    {
+      "confidence": "high",
+      "evidence_metrics": [
+        "journey_patterns.single_zone_journeys",
+        "zones.ranked_by_dwell"
+      ],
+      "rationale": "single_zone_journeys < 50% of total journeys",
+      "title": "Optimize store layout to reduce single-zone journeys"
+    }
+  ]
+}

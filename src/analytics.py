@@ -30,6 +30,8 @@ def run_analytics(journeys_path: str, output_path: str, config: dict) -> None:
     logger.info(f"Loaded {len(df):,} journeys")
 
     with timer("Compute metrics", logger):
+        jpd = df.groupby(df["start_time"].dt.date).size().to_dict()
+        
         metrics = {
             "metadata": {
                 "generated_at": pd.Timestamp.now().isoformat(),
@@ -42,6 +44,8 @@ def run_analytics(journeys_path: str, output_path: str, config: dict) -> None:
             "demographics": _build_demographics(df),
             "journey_patterns": _build_journey_patterns(df, config),
             "data_quality": _build_data_quality(df),
+            # FIX: Export the new metric as a string-keyed dictionary
+            "journeys_per_day": {str(k): int(v) for k, v in jpd.items()},
         }
 
     with timer("Write metrics", logger):
