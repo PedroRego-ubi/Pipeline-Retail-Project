@@ -15,7 +15,7 @@ analytics:
 llm:
   model: llama3.1:8b
   temperature: 0.0            # always 0 for reproducibility
-  timeout_s: 120
+  timeout_s: 600
   max_retries: 2
   base_url: http://localhost:11434
   prompt_version: v3_grounded  # which prompt file to load from prompts/
