@@ -1,0 +1,32 @@
+stitcher:
+  max_gap_s: 1800          # max seconds between events in the same journey (30 min)
+  max_journey_s: 7200      # max total journey duration before force-close (2 hours)
+  confidence:
+    orphan_penalty: 0.10          # per orphan-style assignment
+    no_exit_penalty: 0.20         # if no explicit exit event
+    near_threshold_gap_penalty: 0.10
+    near_threshold_gap_ratio: 0.70  # flag gaps > 70% of max_gap_s
+
+analytics:
+  peak_hour_multiplier: 1.5   # hour is "peak" if traffic > 1.5x mean
+  top_paths_count: 5
+  top_paths_min_length: 2     # minimum zones in a "common path"
+
+llm:
+  model: llama3.1:8b
+  temperature: 0.0            # always 0 for reproducibility
+  timeout_s: 120
+  max_retries: 2
+  base_url: http://localhost:11434
+  prompt_version: v3_grounded  # which prompt file to load from prompts/
+
+paths:
+  events: data/raw/events.csv
+  journeys: data/processed/journeys.csv
+  metrics: outputs/metrics.json
+  insights: outputs/insights.json
+  report: outputs/weekly_report.md
+  quality_report: outputs/quality_report.json
+  prompts_dir: prompts/
+  templates_dir: templates/
+  logs_dir: logs/

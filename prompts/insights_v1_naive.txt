@@ -1,0 +1,3 @@
+Summarize this retail data:
+
+{{ metrics_json }}
